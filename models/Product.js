@@ -20,7 +20,12 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ['Electronics', 'Fashion', 'Home & Garden', 'Sports', 'Books', 'Art & Crafts', 'Vintage', 'Other'],
+    enum: [
+      // Regular categories
+      'Electronics', 'Fashion', 'Home & Garden', 'Sports', 'Books', 'Art & Crafts', 'Vintage', 'Other',
+      // Upside Down categories
+      'Forbidden Tech', 'Dark Fashion', 'Cursed Objects', 'Occult', 'Experiments', 'Contraband', 'Unknown Origin'
+    ],
   },
   images: [{
     url: String,
