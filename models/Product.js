@@ -43,6 +43,8 @@ const productSchema = new mongoose.Schema({
     address: String,
     email: String,
     type: { type: String, default: 'artisan' },
+    upiId: String,
+    qrImageUrl: String,
   },
   deviceId: {
     type: String,
