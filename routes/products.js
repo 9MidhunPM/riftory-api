@@ -115,8 +115,8 @@ router.post('/', async (req, res) => {
 
     res.status(201).json({ success: true, data: product });
   } catch (error) {
-    console.error('[Products] Create error:', error);
-    res.status(500).json({ success: false, error: 'Failed to create product' });
+    console.error('[Products] Create error:', error.message || error);
+    res.status(500).json({ success: false, error: `Failed to create product: ${error.message}` });
   }
 });
 
