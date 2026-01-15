@@ -9,10 +9,12 @@ const { uploadMultipleImages, deleteMultipleImages } = require('../config/cloudi
  */
 router.get('/', async (req, res) => {
   try {
-    const { category, limit = 50, skip = 0 } = req.query;
+    const { category, limit = 50, skip = 0, upsideDown } = req.query;
     
     const query = { isActive: true };
     if (category) query.category = category;
+    // support fetching Upside Down products via ?upsideDown=true
+    if (upsideDown === 'true' || upsideDown === true) query.isUpsideDown = true;
 
     const products = await Product.find(query)
       .sort({ createdAt: -1 })
@@ -20,7 +22,7 @@ router.get('/', async (req, res) => {
       .skip(parseInt(skip))
       .lean();
 
-    console.log(`[Products] Fetched ${products.length} products`);
+    console.log(`[Products] Fetched ${products.length} products (upsideDown=${upsideDown || 'false'})`);
     res.json({ success: true, data: products, count: products.length });
   } catch (error) {
     console.error('[Products] Fetch error:', error);
@@ -73,7 +75,7 @@ router.get('/:id', async (req, res) => {
  */
 router.post('/', async (req, res) => {
   try {
-    const { title, price, description, category, images, deviceId, seller } = req.body;
+    const { title, price, description, category, images, deviceId, seller, isUpsideDown } = req.body;
 
     // Validate required fields
     if (!title || !price || !description || !category || !deviceId) {
@@ -105,6 +107,7 @@ router.post('/', async (req, res) => {
         name: 'Riftory Seller',
         type: 'artisan',
       },
+      isUpsideDown: !!isUpsideDown,
     });
 
     await product.save();

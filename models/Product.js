@@ -56,6 +56,10 @@ const productSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
+  isUpsideDown: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // Update the updatedAt field before saving
