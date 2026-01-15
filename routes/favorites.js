@@ -15,9 +15,9 @@ router.get('/:deviceId', async (req, res) => {
       .sort({ savedAt: -1 })
       .lean();
 
-    // Filter out null products (deleted products)
+    // Filter out null products (deleted products) and Upside Down products
     const validFavorites = favorites
-      .filter(fav => fav.productId !== null)
+      .filter(fav => fav.productId !== null && !fav.productId.isUpsideDown)
       .map(fav => ({
         ...fav,
         product: fav.productId,

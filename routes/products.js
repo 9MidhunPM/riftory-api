@@ -13,8 +13,13 @@ router.get('/', async (req, res) => {
     
     const query = { isActive: true };
     if (category) query.category = category;
-    // support fetching Upside Down products via ?upsideDown=true
-    if (upsideDown === 'true' || upsideDown === true) query.isUpsideDown = true;
+    // Fetch either Upside Down products OR normal products (never both)
+    if (upsideDown === 'true' || upsideDown === true) {
+      query.isUpsideDown = true;
+    } else {
+      // Explicitly exclude Upside Down products from normal feed
+      query.isUpsideDown = { $ne: true };
+    }
 
     const products = await Product.find(query)
       .sort({ createdAt: -1 })
@@ -37,8 +42,17 @@ router.get('/', async (req, res) => {
 router.get('/my/:deviceId', async (req, res) => {
   try {
     const { deviceId } = req.params;
+    const { upsideDown } = req.query;
     
-    const products = await Product.find({ deviceId, isActive: true })
+    const query = { deviceId, isActive: true };
+    // Filter by upsideDown flag - default to normal products only
+    if (upsideDown === 'true' || upsideDown === true) {
+      query.isUpsideDown = true;
+    } else {
+      query.isUpsideDown = { $ne: true };
+    }
+    
+    const products = await Product.find(query)
       .sort({ createdAt: -1 })
       .lean();
 
